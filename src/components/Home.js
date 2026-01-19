@@ -22,12 +22,12 @@ const Home = () => {
       </header>
 
       <section className="courses-section">
-        <h2>Featured Courses</h2>
+      
         <CourseList />
       </section>
 
       <section className="testimonials-section">
-        <h2>What Our Students Say</h2>
+   
         <Testimonial />
       </section>
 

@@ -1,62 +1,100 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Signup.css";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Handle input changes
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = (e) => {
+  // Submit form
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Signup data:", formData);
-    // You can add real signup logic here
-    alert("Signup successful!");
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:5000/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Signup failed");
+      } else {
+        alert("Signup successful!");
+        navigate("/login"); // redirect after signup
+      }
+    } catch (err) {
+      setError("Server not reachable");
+    }
+
+    setLoading(false);
   };
 
   return (
     <div className="signup-container">
       <div className="signup-card">
-        <h2>Create Your Account</h2>
+        <h2>Create Account</h2>
+        <p className="signup-subtitle">
+          Join EduPlatform and start learning
+        </p>
+
+        {error && <div className="signup-error">{error}</div>}
+
         <form onSubmit={handleSubmit}>
-          <label htmlFor="name">Full Name</label>
+          <label>Full Name</label>
           <input
             type="text"
             name="name"
-            placeholder="Enter your full name"
+            placeholder="Your full name"
             value={formData.name}
             onChange={handleChange}
             required
           />
 
-          <label htmlFor="email">Email</label>
+          <label>Email</label>
           <input
             type="email"
             name="email"
-            placeholder="Enter your email"
+            placeholder="example@email.com"
             value={formData.email}
             onChange={handleChange}
             required
           />
 
-          <label htmlFor="password">Password</label>
+          <label>Password</label>
           <input
             type="password"
             name="password"
-            placeholder="Enter a password"
+            placeholder="Create a strong password"
             value={formData.password}
             onChange={handleChange}
             required
           />
 
-          <button type="submit" className="btn-signup">
-            Sign Up
+          <button type="submit" disabled={loading} className="btn-signup">
+            {loading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
 

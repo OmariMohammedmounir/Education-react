@@ -4,6 +4,7 @@ import mathImg from "../assets/logo.png";
 import scienceImg from "../assets/logo.png";
 import historyImg from "../assets/logo.png";
 import programmingImg from "../assets/logo.png";
+import "./Testimonial.css";
 
 const courses = [
   { title: "Mathematics", level: "Beginner", img: mathImg },
@@ -16,8 +17,9 @@ const CourseList = () => {
   return (
     
     <div className="course-grid">
-        
+             
       {courses.map((course, index) => (
+        
         <div className="course-card" key={index}>
           <img src={course.img} alt={course.title} />
           <div className="course-info">
